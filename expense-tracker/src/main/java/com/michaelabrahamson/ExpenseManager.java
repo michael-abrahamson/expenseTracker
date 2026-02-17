@@ -21,7 +21,7 @@ public class ExpenseManager {
 
         int choice;
         while (true) { 
-            System.out.println("Enter your choice:");
+            System.out.print("Enter your choice: ");
 
             try {
                 choice = scanner.nextInt();
@@ -77,5 +77,10 @@ public class ExpenseManager {
     }
 
     public static void viewExpenses(ArrayList<Expense> expenses) {
+        if (expenses.isEmpty()) {
+            System.out.println("No expenses found.");
+            return;
+        }
+        expenses.forEach(System.out::println);
     }
 }

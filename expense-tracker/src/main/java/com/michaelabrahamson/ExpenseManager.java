@@ -5,7 +5,7 @@ import java.util.Scanner;
 
 public class ExpenseManager {
 
-    final static String[] ExpenseMenu = {"\n1. Create Expense", "2. View Expenses", "3. Update Expense", "4. Delete Expense", "5. View Summary", "6. View Monthly Summary", "7. Exit"};
+    final static String[] ExpenseMenu = {"\n1. Create Expense", "2. View Expenses", "3. Update Expense", "4. Delete Expense", "5. View Summary", "6. View Year Summary", "7. Exit"};
     final static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
@@ -47,7 +47,7 @@ public class ExpenseManager {
                 case 5 ->
                     viewSummary(expenses);
                 case 6 ->
-                    viewYearSummary(expenses, "2023");
+                    viewYearSummary(expenses);
                 case 7 -> {
                     System.out.println("Exiting...");
                     System.exit(0);
@@ -138,8 +138,12 @@ public class ExpenseManager {
         System.out.println("\nTotal Expenses: $" + total);
     }
 
-    public static void viewYearSummary(ArrayList<Expense> expenses, String year) {
+    public static void viewYearSummary(ArrayList<Expense> expenses) {
 
+        System.out.println("\n Enter the year you wish to view the summary for (YYYY): ");
+        String year = scanner.next();
+        double total = expenses.stream().filter(expense -> expense.getDate().startsWith(year)).mapToDouble(Expense::getAmount).sum();
+        System.out.println("\nTotal Expenses for " + year + ": $" + total);
     }
 
     public static void viewExpenses(ArrayList<Expense> expenses) {

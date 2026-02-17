@@ -15,10 +15,10 @@ public class ExpenseManager {
             expenses = new ArrayList<>();
         }
 
-        for (String menuItem : ExpenseMenu) {
-            System.out.println(menuItem);
-        }
         while (true) {
+            for (String menuItem : ExpenseMenu) {
+                System.out.println(menuItem);
+            }
 
             int choice;
             while (true) {
@@ -47,7 +47,7 @@ public class ExpenseManager {
                 case 5 ->
                     viewSummary(expenses);
                 case 6 ->
-                    viewMonthlySummary(expenses);
+                    viewYearSummary(expenses, "2023");
                 case 7 -> {
                     System.out.println("Exiting...");
                     System.exit(0);
@@ -73,9 +73,48 @@ public class ExpenseManager {
         System.out.println("\nExpense created successfully.");
 
     }
-
+    /**
+     * This method updates an existing record of an expense from the JSON file. Via user provided id
+     * @param expenses
+     */
     public static void updateExpense(ArrayList<Expense> expenses) {
+        viewExpenses(expenses);
+        System.out.println("\nPlease enter the ID of the expense you wish to update: ");
+        int id = scanner.nextInt();
+        
+        Expense expense = expenses.stream().filter(e -> e.getId() == id).findFirst().orElse(null);
+        if (expense == null) {
+            System.out.println("\nExpense with ID " + id + " not found.");
+            return;
+        }
 
+        expenses.remove(expense);
+        System.out.println("\n 1. Update Description \n 2. Update Amount \n 3. Update Date");
+        System.out.print("\n Please enter the field you wish to change: ");
+        int field = scanner.nextInt();
+        switch (field) {
+            case 1 -> {
+                System.out.print("Enter the new description: ");
+                String newDescription = scanner.next();
+                expenses.add(new Expense(id, newDescription, expense.getAmount(), expense.getDate()));
+
+            }
+            case 2 -> {
+                System.out.print("Enter the new amount: ");
+                double newAmount = scanner.nextDouble();
+                expenses.add(new Expense(id, expense.getDescription(), newAmount, expense.getDate()));
+
+            }
+            case 3 -> {
+                System.out.print("Enter the new date (YYYY-MM-DD): ");
+                String newDate = scanner.next();
+                expenses.add(new Expense(id, expense.getDescription(), expense.getAmount(), newDate));
+
+            }
+        }
+
+        System.out.println("\nExpense updated successfully.");
+        ExpenseStorage.saveExpenses(expenses);
     }
 
     /**
@@ -95,10 +134,11 @@ public class ExpenseManager {
     }
 
     public static void viewSummary(ArrayList<Expense> expenses) {
-
+        double total = expenses.stream().mapToDouble(Expense::getAmount).sum();
+        System.out.println("\nTotal Expenses: $" + total);
     }
 
-    public static void viewMonthlySummary(ArrayList<Expense> expenses) {
+    public static void viewYearSummary(ArrayList<Expense> expenses, String year) {
 
     }
 

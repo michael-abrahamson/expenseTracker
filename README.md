@@ -19,6 +19,8 @@ The goal of this project was to reinforce:
 
 If you are using the included Makefile:
 
+    make compile
+
     make run
 
 ---

@@ -53,7 +53,9 @@ public class ExpenseManager {
         System.out.print("Enter the date of the expense (YYYY-MM-DD): ");
         String date = scanner.next();
 
-        expenses.add(new Expense(expenses.size() + 1, description, amount, date));
+        int maxId = expenses.stream().mapToInt(Expense::getId).max().orElse(0);
+
+        expenses.add(new Expense(maxId + 1, description, amount, date));
         ExpenseStorage.saveExpenses(expenses);
         // expenses.forEach(System.out::println);
         
@@ -63,9 +65,17 @@ public class ExpenseManager {
 
 
     }
-
+    /**
+     * This method deletes an expense from the saved expenses in the JSON file. Via user given ID of the record to delete.
+     * @param expenses
+     */
     public static void deleteExpense(ArrayList<Expense> expenses) {
+        viewExpenses(expenses);
 
+        System.out.println("Please enter the ID of the expense you wish to delete: ");
+        int id = scanner.nextInt();
+        expenses.removeIf(expense -> expense.getId() == id);
+        ExpenseStorage.saveExpenses(expenses);
     }
 
     public static void viewSummary(ArrayList<Expense> expenses) {
